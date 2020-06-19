@@ -8,6 +8,16 @@ defmodule MarsProbes.DirectionHelperTest do
     assert direction == "N"
   end
 
+  test "get direction from integer > 3" do
+    direction = MarsProbes.DirectionHelper.direction_name(5)
+    assert direction == "E"
+  end
+
+  test "get direction from integer < 0" do
+    direction = MarsProbes.DirectionHelper.direction_name(-2)
+    assert direction == "S"
+  end
+
   test "get direction from float with decimal part, rouding down as needed" do
     direction = MarsProbes.DirectionHelper.direction_name(0.2)
     assert direction == "N"
@@ -60,6 +70,16 @@ defmodule MarsProbes.DirectionHelperTest do
   test "get direction number from integer in range 0..3" do
     direction = MarsProbes.DirectionHelper.direction_number(0)
     assert direction == 0
+  end
+
+  test "get direction number from integer > 3" do
+    direction = MarsProbes.DirectionHelper.direction_number(5)
+    assert direction == 1
+  end
+
+  test "get direction number from integer < 0" do
+    direction = MarsProbes.DirectionHelper.direction_number(-2)
+    assert direction == 2
   end
 
   test "get direction number from float with decimal part, rouding down as needed" do
