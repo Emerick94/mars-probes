@@ -1,33 +1,30 @@
 defmodule MarsProbes.PlateauMapper do
   use Agent
 
+  alias MarsProbes.DirectionHelper
+
   @doc """
   Starts a new plateau.
   """
-  def start_link(x, y) do
-    Agent.start_link(fn ->
-      %{
-        size: %{x: x, y: y},
-        probes: []
-      }
-    end)
+  def start_plateau(x, y) do
+    %{
+      size: %{x: x, y: y},
+      probes: []
+    }
   end
 
   @doc """
   Deploys a probe to an existing plateau.
   """
   def add_probe(plateau, x, y, direction) do
-    # aaa
-  end
+    normalized_direction = DirectionHelper.direction_number(direction)
+    new_probe = %{x: x, y: y, direction: normalized_direction}
 
-  @doc """
-  Puts the `value` for the given `key` in the `plateau`.
-  """
-  def put(plateau, key, value) do
-    Agent.update(plateau, &Map.put(&1, key, value))
-  end
+    {_, plateau} =
+      Map.get_and_update(plateau, :probes, fn probes ->
+        {probes, [new_probe | probes]}
+      end)
 
-  def get(plateau, key) do
-    Agent.get(plateau, &Map.get(&1, key))
+    plateau
   end
 end

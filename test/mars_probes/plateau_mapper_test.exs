@@ -1,19 +1,24 @@
 defmodule MarsProbes.PlateauMapperTest do
   use ExUnit.Case
-  doctest MarsProbes
+  alias MarsProbes.PlateauMapper
+  doctest PlateauMapper
 
   setup do
-    {:ok, plateau} = MarsProbes.PlateauMapper.start_link(5, 6)
+    plateau = PlateauMapper.start_plateau(5, 6)
     %{plateau: plateau}
   end
 
-  test "stores plateau size" do
-    {:ok, plateau} = MarsProbes.PlateauMapper.start_link(4, 7)
-    assert MarsProbes.PlateauMapper.get(plateau, :size) == %{x: 4, y: 7}
+  test "stores plateau initial state" do
+    plateau = PlateauMapper.start_plateau(4, 7)
+
+    assert plateau == %{
+             size: %{x: 4, y: 7},
+             probes: []
+           }
   end
 
   test "deploy probe", %{plateau: plateau} do
-    MarsProbes.PlateauMapper.add_probe(1, 2, "N")
-    assert MarsProbes.PlateauMapper.get(plateau, :probes) == [%{x: 1, y: 2, direction: "N"}]
+    plateau = PlateauMapper.add_probe(plateau, 1, 2, "N")
+    assert plateau.probes == [%{x: 1, y: 2, direction: 0}]
   end
 end
