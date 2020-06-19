@@ -20,11 +20,25 @@ defmodule MarsProbes.PlateauMapper do
     normalized_direction = DirectionHelper.direction_number(direction)
     new_probe = %{x: x, y: y, direction: normalized_direction}
 
-    {_, plateau} =
-      Map.get_and_update(plateau, :probes, fn probes ->
-        {probes, [new_probe | probes]}
-      end)
+    case DirectionHelper.validate_probe(plateau, new_probe) do
+      {:error, message} ->
+        {:error, message}
 
-    plateau
+      {:ok, new_probe} ->
+        {_, plateau} =
+          Map.get_and_update(plateau, :probes, fn probes ->
+            {probes, [new_probe | probes]}
+          end)
+
+        plateau
+    end
+  end
+
+  def show_probes(plateau) do
+    plateau.probes
+    |> Enum.reverse()
+    |> Enum.map(fn probe ->
+      "#{probe.x} #{probe.y} #{DirectionHelper.direction_name(probe.direction)}"
+    end)
   end
 end

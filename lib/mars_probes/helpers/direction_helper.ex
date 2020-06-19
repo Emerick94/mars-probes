@@ -43,4 +43,20 @@ defmodule MarsProbes.DirectionHelper do
   def direction_number(_invalid) do
     {:error, "this argument is invalid, please use integer, float, string or atom."}
   end
+
+  def validate_probe(plateau, probe) do
+    cond do
+      probe.x > plateau.size.x || probe.x < 0 ->
+        {:error, "x position is invalid"}
+
+      probe.y > plateau.size.y || probe.y < 0 ->
+        {:error, "y position is invalid"}
+
+      probe.direction > 3 || probe.direction < 0 ->
+        {:error, "direction is invalid"}
+
+      true ->
+        {:ok, probe}
+    end
+  end
 end
