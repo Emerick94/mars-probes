@@ -1,19 +1,20 @@
 defmodule MarsProbes.DirectionHelper do
   @valid_names ["N", "E", "S", "W", "NORTH", "EAST", "SOUTH", "WEST"]
+  @directions "NESW"
   @direction_number %{0 => "N", 1 => "E", 2 => "S", 3 => "W"}
 
-  def direction(number) when is_integer(number) do
-    direction = rem(number, 4)
-    Map.get(@direction_number, direction)
+  def direction_name(number) when is_integer(number) do
+    direction_name = rem(number, 4)
+    Map.get(@direction_number, direction_name)
   end
 
-  def direction(number) when is_float(number) do
+  def direction_name(number) when is_float(number) do
     number
     |> round()
-    |> direction()
+    |> direction_name()
   end
 
-  def direction(name) when is_bitstring(name) do
+  def direction_name(name) when is_bitstring(name) do
     normalized_name = String.upcase(name)
 
     if Enum.member?(@valid_names, normalized_name) do
