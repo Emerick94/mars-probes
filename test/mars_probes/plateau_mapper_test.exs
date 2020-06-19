@@ -21,4 +21,9 @@ defmodule MarsProbes.PlateauMapperTest do
     plateau = PlateauMapper.add_probe(plateau, 1, 2, "N")
     assert plateau.probes == [%{x: 1, y: 2, direction: 0}]
   end
+
+  test "show probes", %{plateau: plateau} do
+    plateau = PlateauMapper.add_probe(plateau, 1, 2, "N")
+    assert PlateauMapper.probes() == [%{x: 1, y: 2, direction: "N"}]
+  end
 end
