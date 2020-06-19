@@ -12,6 +12,10 @@ defmodule MarsProbes.DirectionHelper do
     end
   end
 
+  def direction_number(number) when is_integer(number) and number < 0 do
+    direction_number(4 + number)
+  end
+
   def direction_number(number) when is_integer(number) do
     rem(number, 4)
   end
