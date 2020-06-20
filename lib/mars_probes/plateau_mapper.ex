@@ -141,19 +141,19 @@ defmodule MarsProbes.PlateauMapper do
     update_probe(plateau, probe)
   end
 
-  def parse_plateau_size(plateau_size) do
+  defp parse_plateau_size(plateau_size) do
     plateau_size
     |> String.split(" ")
     |> normalize_axes()
   end
 
-  def normalize_axes(axes) when is_list(axes) do
+  defp normalize_axes(axes) when is_list(axes) do
     Enum.map(axes, fn axis ->
       normalize_axis(axis)
     end)
   end
 
-  def normalize_axis(axis) when is_bitstring(axis) do
+  defp normalize_axis(axis) when is_bitstring(axis) do
     {parsed_axis, _} = Integer.parse(axis)
     parsed_axis
   end
