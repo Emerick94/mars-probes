@@ -1,6 +1,5 @@
 defmodule MarsProbes.PlateauMapperTest do
   use ExUnit.Case
-  import ExUnit.CaptureIO
 
   alias MarsProbes.PlateauMapper
   doctest PlateauMapper
@@ -22,9 +21,23 @@ defmodule MarsProbes.PlateauMapperTest do
            }
   end
 
+  test "stores plateau with user input" do
+    plateau = PlateauMapper.start_plateau("4 7\n")
+
+    assert plateau == %{
+             size: %{x: 4, y: 7},
+             probes: []
+           }
+  end
+
   # add_probe
   test "add valid probe", %{plateau: plateau} do
     plateau = PlateauMapper.add_probe(plateau, 2, 1, "E")
+    assert plateau.probes == [%{direction: 1, x: 2, y: 1}, %{direction: 0, x: 1, y: 2}]
+  end
+
+  test "add valid probe with user input", %{plateau: plateau} do
+    plateau = PlateauMapper.add_probe(plateau, "2 1 e")
     assert plateau.probes == [%{direction: 1, x: 2, y: 1}, %{direction: 0, x: 1, y: 2}]
   end
 
@@ -32,14 +45,6 @@ defmodule MarsProbes.PlateauMapperTest do
     plateau = PlateauMapper.add_probe(plateau, 7, 6, "N")
     assert plateau.probes == [%{direction: 0, x: 1, y: 2}]
   end
-
-  # test "plateu unchanged when adding invalid probe", %{plateau: plateau} do
-  #   execute_add_probe = fn ->
-  #     PlateauMapper.add_probe(plateau, 7, 6, "N")
-  #   end
-
-  #   assert capture_io(execute_add_probe) == "x position is invalid"
-  # end
 
   test "add multiple valid probes", %{plateau: plateau} do
     plateau = PlateauMapper.add_probe(plateau, 2, 4, "W")
