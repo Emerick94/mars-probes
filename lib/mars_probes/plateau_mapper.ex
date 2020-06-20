@@ -6,7 +6,21 @@ defmodule MarsProbes.PlateauMapper do
   @doc """
   Starts a new plateau.
   """
-  def start_plateau(x, y) do
+  def start_plateau(plateau_size) when is_bitstring(plateau_size) do
+    plateau_size
+    |> parse_plateau_size()
+    |> start_plateau()
+  end
+
+  def start_plateau([x, y]) when is_integer(x) and is_integer(y) do
+    start_plateau(x, y)
+  end
+
+  def start_plateau(_) do
+    IO.puts("Invalid format")
+  end
+
+  def start_plateau(x, y) when is_integer(x) and is_integer(y) do
     %{
       size: %{x: x, y: y},
       probes: []
@@ -16,6 +30,15 @@ defmodule MarsProbes.PlateauMapper do
   @doc """
   Deploys a probe to an existing plateau.
   """
+  def add_probe(plateau, user_input) when is_bitstring(user_input) do
+    [x, y, direction] =
+      user_input
+      |> String.split(" ")
+
+    [x, y] = normalize_axes([x, y])
+    add_probe(plateau, x, y, direction)
+  end
+
   def add_probe(plateau, x, y, direction) do
     normalized_direction = DirectionHelper.direction_number(direction)
     new_probe = %{x: x, y: y, direction: normalized_direction}
@@ -116,5 +139,22 @@ defmodule MarsProbes.PlateauMapper do
       end
 
     update_probe(plateau, probe)
+  end
+
+  def parse_plateau_size(plateau_size) do
+    plateau_size
+    |> String.split(" ")
+    |> normalize_axes()
+  end
+
+  def normalize_axes(axes) when is_list(axes) do
+    Enum.map(axes, fn axis ->
+      normalize_axis(axis)
+    end)
+  end
+
+  def normalize_axis(axis) when is_bitstring(axis) do
+    {parsed_axis, _} = Integer.parse(axis)
+    parsed_axis
   end
 end
